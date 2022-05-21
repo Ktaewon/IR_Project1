@@ -1,7 +1,8 @@
 from konlpy.tag import Mecab, Komoran, Twitter, Okt
 
 #text = "안녕하세요. 컴퓨터 전공 4학년 김태원입니다. 010-xxxx-xxxx -.-"
-text = "카이 설치하느라 이틀 걸렸고 이건 고통이다."
+#text = "카이 설치하느라 이틀 걸렸고 이건 고통이다."
+text = "It's good day today. ^-^ :)"
 
 # Mecab
 print("===================Mecab===================")
@@ -33,8 +34,8 @@ print('품사 태깅:',t_pos)
 t_morphs = twitter.morphs(text)
 print('형태소 단위:', t_morphs)
 
-# Twitter
-print("===================Twitter===================")
+# Okt
+print("===================Okt===================")
 okt = Okt()
 o_nouns = okt.nouns(text)
 print('명사 단위:',o_nouns)
