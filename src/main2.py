@@ -24,22 +24,27 @@ def df(t, D):
             count += 1
     return count
 
+# idf (): 
 def idf(t, D):
     N = len(D)
     return log10(1 + N/(df(t, D)))
 
+# tf-idf weight
 def w_tfidf(t, d, D):
     return w_tf(t, d) * idf(t, D)
 
+# tf-idf: 
 def tfidf(t, d, D):
     return tf(t, d) * idf(t, D)
 
+# dictionary에 들어갈 Term
 class Term:
     def __init__(self, term):
         self.term = term
         self.posting_list = None
         self.tail = None
 
+# Term에 대한 Posting Linked list를 위한 Posting
 class Posting: 
     def __init__(self, docID, tf_idf, next=None): #data 만 입력시 next 초기값은 None이다. 
         self.docID = docID #다음 데이터 주소 초기값 = None
@@ -47,7 +52,7 @@ class Posting:
         self.w_td = tf_idf
         self.next = next
         
-# inverted index 출력
+# inverted index 출력 & 파일 저장
 def printPostingList(term_dictionary):
     f = open(os.getcwd() + "/output/posting_lists.txt", "w", encoding="utf-8-sig")
     for term in term_dictionary:
@@ -62,11 +67,16 @@ def printPostingList(term_dictionary):
         f.write("({0}, {1});\n".format(node.docID, node.tf_idf))
     f.close()
 
-
+# Inverted Index 생성 함수 & tf-idf weight 계산
 def makePostingList(D): # D : CORPUS
     term_dictionary = {}
-    # term 마다 (doc번호, tf-idf값)
+    # TO-DO : (1) 형태소 분석 전 데이터 정제 필요
+    # TO-DO : (2) 형태소 분석 후 데이터 정제 필요
+    #             1) Lemmatization 2) Stemming 필요?
+    # TO-DO : (3) tf-idf 머가 맞는지 잘 모르겠음 -> 강의 듣고 다시 해야 할 듯...
+    
     morphs_D = [mecab.morphs(d) for d in D]
+    # term 마다 (doc번호, tf-idf값)
     for docId, doc in enumerate(morphs_D):
         for term in set(doc):
             w_td = w_tfidf(term, doc, morphs_D)
@@ -77,11 +87,9 @@ def makePostingList(D): # D : CORPUS
             else:
                 term_dictionary[term].tail.next = Posting(docId, w_td)
                 term_dictionary[term].tail = term_dictionary[term].tail.next
-    # TO-DO : 출력하는 함수 짜기
-    
-    #pprint.pprint(term_dictionary)
     return term_dictionary
 
+# term-at-a-time 방식의 cosine 점수 계산 함수
 def consineScore(q, D, term_dict):
     N = len(D)
     scores = [0 for i in range(N)]
@@ -97,8 +105,12 @@ def consineScore(q, D, term_dict):
                 node = node.next
             scores[node.docID] += node.w_td * w_tq
     print(scores)
+    # TO-DO : (3) arr length 만큼 나누는 코드 필요
+    #             근데 이게 무슨 소린지 이해 X
+    #             강의 다시 보고 이어서 진행 하기
+    # for each d 
     return scores
-    #for each d 
+    
         
 
 # 문서 입력
@@ -108,7 +120,6 @@ CORPUS = ["""<title>1. 지미 카터</title>
 체첸 공화국 또는 줄여서 체첸은 러시아의 공화국이다. 체첸에서 사용되는 언어는 체첸어와 러시아어이다. 체첸어는 캅카스제어 중, 북동 캅카스제어로 불리는 그룹에 속하는데 인구시어와 매우 밀접한 관계에 있다.
 """,
 """<title>3. 백남준</title> 
-192.168.10.1 https://naver.com
 백남준은 한국 태생의 미국 미술작가, 작곡가, 전위 예술가이다. 여러 가지 매체로 예술 활동을 하였고 특히 비디오 아트라는 새로운 예술을 창안하여 발전시켰다는 평가를 받는 예술가로서 '비디오 아트의 창시자'로 알려져 있다. 
 """
 ]
