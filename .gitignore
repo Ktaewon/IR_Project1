@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/input/full_corpus.hwp
+/input/full_corpus.txt
+/input/full_corpus2.txt
