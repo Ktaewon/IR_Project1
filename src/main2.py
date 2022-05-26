@@ -58,13 +58,13 @@ def printPostingList(term_dictionary):
     f = open(os.getcwd() + "/output/posting_lists.txt", "w", encoding="utf-8-sig")
     for term in term_dictionary:
         node = term_dictionary[term].next
-        print("[{}] -> ".format(term), end = '')
+        #print("[{}] -> ".format(term), end = '')
         f.write("[{}] -> ".format(term))
         while node.next: #node.next =None이 아닐 경우. 즉, node의 next가 있는 경우 실행 
-            print("({0}, {1}) -> ".format(node.docID, node.tf_idf), end = '') 
+            #print("({0}, {1}) -> ".format(node.docID, node.tf_idf), end = '') 
             f.write("({0}, {1}) -> ".format(node.docID, node.tf_idf))
             node=node.next
-        print("({0}, {1});".format(node.docID, node.tf_idf))
+        #print("({0}, {1});".format(node.docID, node.tf_idf))
         f.write("({0}, {1});\n".format(node.docID, node.tf_idf))
     f.close()
 
@@ -96,6 +96,7 @@ def consineScore(q, D, term_dict):
     scores = {i: 0 for i in range(N)}
     length = [0 for i in range(N)]
     query_terms = mecab.morphs(q)
+    print(query_terms)
     for t in set(query_terms):
         w_tq = w_tfidf(t, q, [q]) #w_tf(t, q)
         print(t, w_tq)
@@ -131,7 +132,8 @@ term_dict = makePostingList(CORPUS)
 printPostingList(term_dict)
 
 # 쿼리 들어옴
-query = ["체첸 공화국 만세 체첸 러시아 민주당에서 예술가, 아티스트, 작곡가"]
+query = [input("검색어를 입력해주세요.: ")]
+#query = ["체첸 공화국 만세 체첸 러시아 민주당에서 예술가, 아티스트, 작곡가"]
 
 # 쿼리 토크나이징 & 점수 계산
 scores =consineScore(query[0], CORPUS, term_dict)

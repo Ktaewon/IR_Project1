@@ -61,25 +61,28 @@ def readTXTandParseAsList(filename:str):
     #print(corpus_dict)
     return corpus_list
 
-
-corpus = readTXTandParseAsList(os.getcwd() + '/input/full_corpus.txt')
-for i in range(len(corpus)):
-    print("[{}] : {}".format(i, corpus[i]))
+def main():
+    corpus = readTXTandParseAsList(os.getcwd() + '/input/full_corpus.txt')
+    for i in range(len(corpus)):
+        print("[{}] : {}".format(i, corpus[i]))
     
-# decoded_text = readHWPandParse(os.getcwd() + '/input/full_corpus.hwp')
-# print(decoded_text)
+    # decoded_text = readHWPandParse(os.getcwd() + '/input/full_corpus.hwp')
+    # print(decoded_text)
 
 
-# tree = ET.fromstring(decoded_text)
+    # tree = ET.fromstring(decoded_text)
 
-# root = tree.getroot() # 해당 트리의 root를 반환
-# print(root.tag)
-# print(root.attrib) 
+    # root = tree.getroot() # 해당 트리의 root를 반환
+    # print(root.tag)
+    # print(root.attrib) 
 
-# for child in root:
-#     print(child.tag, child.attrib)
-# bs = BeautifulSoup(decoded_text, 'html.parser')
-# print(bs)
+    # for child in root:
+    #     print(child.tag, child.attrib)
+    # bs = BeautifulSoup(decoded_text, 'html.parser')
+    # print(bs)
 
-# 5번 글 /안붙어있었음
-# print(bs.find_all('title'))
+    # 5번 글 /안붙어있었음
+    # print(bs.find_all('title'))
+
+if __name__ == '__main__':
+    main()
