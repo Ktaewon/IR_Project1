@@ -1,5 +1,5 @@
 from konlpy.tag import Mecab
-from math import log10
+from math import log10, sqrt
 import os
 from hwp_txt_read import readTXTandParseAsList
 
@@ -81,14 +81,15 @@ def makePostingList(D): # D : CORPUS
     # TO-DO : (2) 형태소 분석 후 데이터 정제 필요
     #             1) Lemmatization 2) Stemming 필요?
     # TO-DO : (3) tf-idf 머가 맞는지 잘 모르겠음 -> 강의 듣고 다시 해야 할 듯...
-    
     morphs_D = [delete_stopwords(mecab.morphs(d), STOPWORDS) for d in D]
-    length = [len(d) for d in morphs_D]
+    # for l2 normalization
+    length = [0 for i in range(len(D))]
     print(morphs_D)
     # term 마다 (doc번호, tf-idf값)
     for docId, doc in enumerate(morphs_D):
         for term in set(doc):
             w_td = w_tfidf(term, doc, morphs_D)
+            length[docId] += w_td * w_td
             if term not in term_dictionary:
                 term_dictionary[term] = Term(term)
                 term_dictionary[term].next = Posting(docId, w_td)
@@ -96,6 +97,7 @@ def makePostingList(D): # D : CORPUS
             else:
                 term_dictionary[term].tail.next = Posting(docId, w_td)
                 term_dictionary[term].tail = term_dictionary[term].tail.next
+    length = [sqrt(l) for l in length]
     return term_dictionary, length
 
 # term-at-a-time 방식의 cosine 점수 계산 함수
