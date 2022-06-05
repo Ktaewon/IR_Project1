@@ -83,6 +83,7 @@ def printPostingList(term_dictionary):
         f.write("({0}, {1});\n".format(node.docID, node.tf_idf))
     f.close()
 
+# 불용어 제거 함수
 def delete_stopwords(morphs, stopwords):
     after = [t for t in morphs if t not in stopwords]
     return after
