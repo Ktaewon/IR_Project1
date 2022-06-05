@@ -2,8 +2,9 @@ from konlpy.tag import Mecab, Komoran, Twitter, Okt
 
 #text = "안녕하세요. 컴퓨터 전공 4학년 김태원입니다. 010-xxxx-xxxx -.-"
 #text = "카이 설치하느라 이틀 걸렸고 이건 고통이다."
-text = "It's good day today. ^-^ :)"
-
+#text = "It's good day today. ^-^ :)"
+text = "지미 카터는 민주당 출신 미국 39번째 대통령이다. 지미 카터는 조지아 주  한 마을에서 태어났다. 조지아 공과대학교를 졸업하였다. 그 후 해군에 들어가 전함·원자력·잠수함의 승무원으로 일하였다. "
+text = "조지아 주 한"
 # Mecab
 print("===================Mecab===================")
 mecab = Mecab(dicpath=r"C:\mecab\mecab-ko-dic")

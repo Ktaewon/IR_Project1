@@ -1,9 +1,9 @@
-from konlpy.tag import Mecab
+from konlpy.tag import Okt
 from math import log10, sqrt
 import os
 from hwp_txt_read import readTXTandParseAsList
 
-mecab = Mecab(dicpath=r"C:\mecab\mecab-ko-dic")
+okt = Okt()
 # STOPWORDS = []
 STOPWORDS = [ 
                 '로', '고', '으면', '을', '의', 
@@ -12,9 +12,9 @@ STOPWORDS = [
                 '를', '으로', '자', '에', '와',
                 '며', '하다', '에서', '다', '하',
                 '있', '였', '었', '여', '이다',
-                "했", '였으며', 
-                ',', '.', '·', '’', '‘',
+                ',', '.', '·', '’', '‘', '\n',
                 ';', '"', '(', ')', '[', ']',
+                '),', '()',
                 '》', '《']
 
 # tf (Term Frequency): 해당 문서에서 특정 단어의 빈도 수
@@ -92,7 +92,7 @@ def makePostingList(D): # D : CORPUS
     # TO-DO : (2) 형태소 분석 후 데이터 정제 필요
     #             1) Lemmatization 2) Stemming 필요?
     # TO-DO : (3) tf-idf 머가 맞는지 잘 모르겠음 -> 강의 듣고 다시 해야 할 듯...
-    morphs_D = [delete_stopwords(mecab.morphs(d), STOPWORDS) for d in D]
+    morphs_D = [delete_stopwords(okt.morphs(d, norm=True, stem=True), STOPWORDS) for d in D]
     # for l2 normalization
     length = [0 for i in range(len(D))]
     for i in range(len(morphs_D)):
@@ -117,7 +117,7 @@ def makePostingList(D): # D : CORPUS
 def consineScore(q, D, term_dict, length):
     N = len(D)
     scores = {i: 0 for i in range(N)}
-    query_terms =  delete_stopwords(mecab.morphs(q), STOPWORDS)
+    query_terms =  delete_stopwords(okt.morphs(q, norm=True, stem=True), STOPWORDS)
     print(query_terms)
     for t in set(query_terms):
         #w_tq = w_tfidf(t, q, [q]) #w_tf(t, q)
