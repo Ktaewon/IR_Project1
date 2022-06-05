@@ -2,9 +2,11 @@ from konlpy.tag import Okt
 from math import log10, sqrt
 import os
 from hwp_txt_read import readTXTandParseAsList
+import heapq
 
 okt = Okt()
 # STOPWORDS = []
+# 불용어 제거를 위한 리스트
 STOPWORDS = [ 
                 '로', '고', '으면', '을', '의', 
                 '가', '이', '은', '들', '는',
@@ -95,9 +97,9 @@ def makePostingList(D): # D : CORPUS
     morphs_D = [delete_stopwords(okt.morphs(d, norm=True, stem=True), STOPWORDS) for d in D]
     # for l2 normalization
     length = [0 for i in range(len(D))]
-    for i in range(len(morphs_D)):
-        print(f'{i} : \n{morphs_D[i]}')
-    #print(morphs_D)
+    # for i in range(len(morphs_D)):
+    #     print(f'{i} : \n{morphs_D[i]}')
+
     # term 마다 (doc번호, tf-idf값)
     for docId, doc in enumerate(morphs_D):
         for term in set(doc):
@@ -131,32 +133,19 @@ def consineScore(q, D, term_dict, length):
                 node = node.next
             scores[node.docID] += node.w_td * w_tq
     
-    # TODO : (3) arr length 만큼 나누는 코드 필요
-    #             근데 이게 무슨 소린지 이해 X
-    #             강의 다시 보고 이어서 진행 하기
-    # -> 일단 아래 처럼 하긴 함
-    # -> 길이가 긴 doc이랑 길이가 짧은 doc이랑 차별두면 안되니까
-    # -> 해당 doc의 전체 길이로 나눠주는 느낌?
-    # 최신) L2 norm 적용완료
+    # top k개 selction을 위한 Max Heap
+    # python의 heapq(MIN HEAP) 응용
+    max_heap = []
     # 정규화 작업 - L2 norm
     for i in range(1, len(CORPUS)):
         scores[i] /= length[i]
-    print(scores)
-    return scores
-    
-        
+        heapq.heappush(max_heap, (-scores[i], scores[i], i))  # (우선 순위, 값, docID)
+
+    # 완성된 Max Heap 반환
+    return max_heap
 
 # 문서 입력
 CORPUS = readTXTandParseAsList(os.getcwd() + '/input/full_corpus.txt')
-# CORPUS = ["""<title>1. 지미 카터</title>
-# 제임스 얼 지미 카터 주니어는 민주당 출신 미국 39번째 대통령이다. 지미 카터는 조지아 주 한 마을에서 태어났다. 조지아 공과대학교를 졸업하였다. 그 후 해군에 들어가 전함·원자력·잠수함의 승무원으로 일하였다.""",
-# """<title>2. 체첸 공화국</title> 
-# 체첸 공화국 또는 줄여서 체첸은 러시아의 공화국이다. 체첸에서 사용되는 언어는 체첸어와 러시아어이다. 체첸어는 캅카스제어 중, 북동 캅카스제어로 불리는 그룹에 속하는데 인구시어와 매우 밀접한 관계에 있다.
-# """,
-# """<title>3. 백남준</title> 
-# 백남준은 한국 태생의 미국 미술작가, 작곡가, 전위 예술가이다. 여러 가지 매체로 예술 활동을 하였고 특히 비디오 아트라는 새로운 예술을 창안하여 발전시켰다는 평가를 받는 예술가로서 '비디오 아트의 창시자'로 알려져 있다. 
-# """
-# ]
 
 # 토큰나이징 & 역인덱싱 & tf-idf weight 계산
 term_dict, length = makePostingList(CORPUS)
@@ -172,9 +161,16 @@ while True:
         break
 
     # 쿼리 토크나이징 & 점수 계산
-    scores =consineScore(query[0], CORPUS, term_dict, length)
+    scores_max_heap =consineScore(query[0], CORPUS, term_dict, length)
 
-    # TODO: sorting 대신에 Heap 사용한 selection 해야함
-    #   - 현재는 sorting이 적용되어 있음
-    print(sorted(scores.items(), key = lambda item: item[1], reverse = True)[:5])
+    # Top K개 뽑기
+    #   - Sorting Version
+    #   print(sorted(scores.items(), key = lambda item: item[1], reverse = True)[:5])
+    
+    #   - Max Heap Version : TOP K개 Selection - Max Heap pop이용
+    k = 5 # 이번 프로그램에서는 top 5개 뽑음
+    result = []
+    for _ in range(k):
+        result.append(heapq.heappop(scores_max_heap)[2])
+    print(result)
 
