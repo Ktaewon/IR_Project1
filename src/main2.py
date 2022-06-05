@@ -6,6 +6,7 @@ import heapq
 
 mecab = Mecab(dicpath=r"C:\mecab\mecab-ko-dic")
 # STOPWORDS = []
+# 불용어 제거를 위한 리스트
 STOPWORDS = [ 
                 '로', '고', '으면', '을', '의', 
                 '가', '이', '은', '들', '는',
@@ -82,6 +83,7 @@ def printPostingList(term_dictionary):
         f.write("({0}, {1});\n".format(node.docID, node.tf_idf))
     f.close()
 
+# 불용어 제거 함수
 def delete_stopwords(morphs, stopwords):
     after = [t for t in morphs if t not in stopwords]
     return after
