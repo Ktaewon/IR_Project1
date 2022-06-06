@@ -122,12 +122,10 @@ def consineScore(q, D, term_dict, length):
     N = len(D)
     scores = {i: 0 for i in range(N)}
     query_terms =  delete_stopwords(mecab.morphs(q), STOPWORDS)
-    print(query_terms)
     for t in set(query_terms):
         #w_tq = w_tfidf(t, q, [q])  -> 0이 되므로 사용X
         #w_tq = w_tf(t, q)  -> 대부분의 쿼리에서 같은 단어가 반복되는 일 없으므로 1로 설정
         w_tq = 1
-        print(t, w_tq)
         if t in term_dict:
             node = term_dict[t].next
             while node.next:
