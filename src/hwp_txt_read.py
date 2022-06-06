@@ -2,31 +2,25 @@ import os
 import olefile
 import zlib
 import struct
-# from bs4 import BeautifulSoup
-# import xml.etree.ElementTree as ET
 
 def readHWP(filename:str):
+    # readHWP 함수 -> 타 사이트 참조 - [출처] [Python] 각종 문서에서 텍스트 추출하기|작성자 IML
     # os.getcwd() + '/input/full_corpus.hwp'
     f = olefile.OleFileIO(filename) #olefile로 .hwp 파일 열기
-    
     # OLE 파일이 가진 stream 리스트
     dirs = f.listdir()
-
     # hwp 파일인지 확인
     if ["FileHeader"] not in dirs or ["\x05HwpSummaryInformation"] not in dirs:
         raise Exception("Not a HWP format.")
-    
     # 문서 포맷 압축 여부 확인
     header_data = f.openstream("FileHeader").read()
     is_compressed = (header_data[36] & 1) == 1
-    
     # Body Sections 불러오기
     nums = []
     for d in dirs:
         if d[0] == "BodyText":
             nums.append(int(d[1][len("Section"):]))
     sections = ["BodyText/Section" + str(x) for x in sorted(nums)]
-    
     # 전체 text 추출
     text = ""
     for section in sections:
@@ -36,7 +30,6 @@ def readHWP(filename:str):
             unpacked_encoded_data = zlib.decompress(encoded_data, -15)
         else:
             unpacked_encoded_data = encoded_data
-    
         # 각 Section 내 text 추출    
         section_text = ""
         i = 0
@@ -52,12 +45,11 @@ def readHWP(filename:str):
             i += 4 + rec_len
         text += section_text
         text += "\n"
-    
     f.close()
     # 디코딩된 text 반환
     return text
 
-
+# HWP 읽어서 각 문서번호에 맞게 List로 반환
 def readHWPandParseAsList(filename:str):
     corpus_list = [""]
     # os.getcwd() + '/input/full_corpus.hwp'
@@ -80,6 +72,7 @@ def readHWPandParseAsList(filename:str):
     
     return corpus_list
 
+# TXT 읽어서 각 문서번호에 맞게 Dictionary로 반환
 def readTXTandParseAsDict(filename:str):
     corpus_dict = {}
     with open(filename, "r", encoding="utf-8") as f:
@@ -100,14 +93,13 @@ def readTXTandParseAsDict(filename:str):
             if not line == "" and not line == "\n":
                 tempbody += line
         corpus_dict[count] = tempbody
-    #print(corpus_dict)
     return corpus_dict
 
+# TXT 읽어서 각 문서번호에 맞게 List로 반환
 def readTXTandParseAsList(filename:str):
     corpus_list = [""]
     with open(filename, "r", encoding="utf-8") as f:
         lines = f.readlines()
-        count = 0
         tempbody = ""
         title_find = False
         for line in lines:
@@ -122,31 +114,14 @@ def readTXTandParseAsList(filename:str):
             if not line == "" and not line == "\n":
                 tempbody += line
         corpus_list.append(tempbody)
-    #print(corpus_dict)
     return corpus_list
 
 def main():
-    corpus = readHWPandParseAsList(os.getcwd() + '/input/full_corpus.hwp')
+    corpus = readTXTandParseAsList(os.getcwd() + '/input/full_corpus.txt')
     for i in range(len(corpus)):
         print("[{}] : {}".format(i, corpus[i]))
     
-    # decoded_text = readHWPandParse(os.getcwd() + '/input/full_corpus.hwp')
-    # print(decoded_text)
 
-
-    # tree = ET.fromstring(decoded_text)
-
-    # root = tree.getroot() # 해당 트리의 root를 반환
-    # print(root.tag)
-    # print(root.attrib) 
-
-    # for child in root:
-    #     print(child.tag, child.attrib)
-    # bs = BeautifulSoup(decoded_text, 'html.parser')
-    # print(bs)
-
-    # 5번 글 /안붙어있었음
-    # print(bs.find_all('title'))
-
+# 해당 파일 단독 실행시 실행
 if __name__ == '__main__':
     main()
