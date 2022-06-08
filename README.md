@@ -15,8 +15,7 @@ https://taewon98.notion.site/31dd3436a6e24a93994d58083daadb84
   
     ```bash
     mkdir input
-    # input 디렉토리에 full_corpus.txt 넣어주세요
-    '''
+    # input 디렉토리에 full_corpus.txt 넣어주세요'''
 - 실행
     
     ```bash
