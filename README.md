@@ -10,7 +10,7 @@
     - 실행 환경 : python 가상환경(venv)
 - 자세한 내용은 아래 Notion 링크의 문서 또는 report 디렉토리를 참고해주세요.
 - 실행 흐름(flow)
-    ![image](https://user-images.githubusercontent.com/33050476/172857653-97eaf341-02c8-4142-ac27-64103674ed84.png)
+    - ![image](https://user-images.githubusercontent.com/33050476/172857653-97eaf341-02c8-4142-ac27-64103674ed84.png)
 
 
 ### 노션 링크
