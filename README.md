@@ -12,7 +12,7 @@ https://taewon98.notion.site/31dd3436a6e24a93994d58083daadb84
     - 다른 방법으로 Mecab 클래스 사용
         - [konlpy mecab 설치 window (velog.io)](https://velog.io/@jyong0719/konlpy-mecab-%EC%84%A4%EC%B9%98-window)
         - 경로 설정 주의하기(주황색 부분)
-        - 
+        
 - Window PC에 KoNLPy 라이브러리가 설치 완료 되었다는 전제 하에,
     
     ```bash
