@@ -1,6 +1,15 @@
 # IR_Project1
 한글 정보 검색 엔진 만들기 프로젝트/Information Retreival engine creation project for korean
 
+- 정보검색 수업 과제로 수행한 프로젝트입니다
+- tf, idf, tf-idf를 적용하여 입력된 Query에 가장 일치하는 상위 5개의 문서 ID를 알려주는 프로그램입니다.
+- 형태소 분석 라이브러리 : KoNLPy 0.6.0 - Mecab, Okt 사용
+- 실행환경
+    - OS : Window 11
+    - Langauge : python 3.8.10
+    - 실행 환경 : python 가상환경(venv)
+- 자세한 내용은 아래 Notion 링크의 문서 또는 report 디렉토리를 참고해주세요.
+
 ### 노션 링크
 https://taewon98.notion.site/31dd3436a6e24a93994d58083daadb84
 
